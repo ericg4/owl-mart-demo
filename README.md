@@ -40,15 +40,15 @@ Next.js provides many starter templates with fully functional authentication + s
 ## Getting Started
 
 ### Setup
-1. Clone this repository:
+1. Clone the template branch of this repo:
    ```bash
-   git clone <repository-url>
+   git clone -b template <repository-url>
    cd owl-mart-demo
    ```
 
 2. Create a new branch for your work:
    ```bash
-   git checkout -b your-name/todo-implementation
+   git checkout -b your-name/todo
    ```
 
 3. Install dependencies:
