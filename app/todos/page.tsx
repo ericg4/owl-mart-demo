@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import TodoItem from '@/components/todo/todo-item';
 
-type Todo = {
+export type Todo = {
   id: number;
   title: string;
   description: string;
@@ -81,26 +82,7 @@ export default function TodosPage() {
 
       <ul className="space-y-2">
         {todos.map((todo) => (
-          <li key={todo.id} className="flex items-center gap-3 p-3 border rounded">
-            <input
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id, todo.completed)}
-              className="w-5 h-5"
-            />
-            <div className={`flex-1 ${todo.completed ? 'line-through text-gray-400' : ''}`}>
-              <div className="font-semibold">{todo.title}</div>
-              {todo.description && (
-                <div className="text-sm text-gray-600">{todo.description}</div>
-              )}
-            </div>
-            <button
-              onClick={() => deleteTodo(todo.id)}
-              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-            >
-              Delete
-            </button>
-          </li>
+          <TodoItem key={todo.id} todo={todo} onDelete={deleteTodo} onToggle={toggleTodo} />
         ))}
       </ul>
     </div>
