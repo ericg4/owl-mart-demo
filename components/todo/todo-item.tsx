@@ -8,13 +8,21 @@ interface TodoItemProps {
 
 export const TodoItem: React.FC<TodoItemProps> = ({todo, onCheck, onDelete}) => {
   return (
-    <li key={todo.id}>
+    <li key={todo.id} className = "flex-row justify-center">
       <input
         type='checkbox'
         checked = {todo.completed}
         onChange={() => onCheck(todo.id, todo.completed)}
       >
       </input>
+      <div>
+        <p>
+          Title: {todo.title}
+        </p>
+        <p>
+          Description: {todo.description}
+        </p>
+      </div>
       <button
         onClick={() => onDelete(todo.id)}
       >

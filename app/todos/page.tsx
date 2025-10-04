@@ -1,11 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
-import Supabase from 'supabase-ts';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '@/lib/supabase';
+import {TodoItem} from '../../components/todo/todo-item'
 
 export type Todo = {
   id: number;
@@ -25,13 +21,42 @@ export default function Page() {
   }, []);
 
   const fetchTodos = async () => {
-    
-    supabase.from('CharlieVinnyTodo').fetch('*')
+    const {data} = await supabase
+      .from('CharlieVinnyTodo')
+      .select('*')
+      .order('id', {ascending: true})
+    if (data) setTodos(data);
   }
+  
   const handleFormSubmit = async () => {
-    
-
+    if (!newTitle.trim()) return;
+    await supabase
+    .from('CharlieVinnyTodo')
+    .insert({
+      title: newTitle,
+      description: newDescr,
+      completed: false
+    })
+    setNewTitle('')
+    setNewDescr('')
+    fetchTodos()
   }
+  
+  const onCheck = async (id: number, completed: boolean) => {
+    await supabase
+    .from('CharlieVinnyTodo')
+    .update({completed: completed})
+    .eq('id', id)
+  }
+
+   const onDelete = async (id: number) => {
+    await supabase
+    .from('CharlieVinnyTodo')
+    .delete()
+    .eq('id', id)
+    fetchTodos()
+  } 
+
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewTitle(event.target.value)
   }
@@ -52,9 +77,12 @@ export default function Page() {
           type="text"
           placeholder=""
           value={newDescr}
-          onSubmit={handleDescrChange}/>
+          onChange={handleDescrChange}/>
+        <button type="submit">Add Todo</button>
       </form>
-      
+      <ul>
+        {todos.map((todo) => {return <TodoItem todo={todo} onCheck={onCheck} key={todo.id} onDelete={onDelete} />})}
+      </ul>
     </div>
   );
 }
